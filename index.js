@@ -151,7 +151,9 @@ app.post("/api/v1/product", async (req, res, next) => {
 
 app.get("api/v1/product", async (req, res, next) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}); // we can use query {here} single or multiple
+
+    // const products = await Product.findById("6339943bb8499c716b18fd07")
 
     res.status(200).json({
       status: "success",

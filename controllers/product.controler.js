@@ -97,3 +97,46 @@ exports.bulkUpdateProduct = async (req, res, next) => {
     });
   }
 };
+
+exports.deleteProductById = async (req, res, next) => {
+  try {
+    const id = req.params;
+    const result = await Product.deleteOne({ _id: id });
+    res.status(200).json({
+      status: "success",
+      message: "successfully deleted that product",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: "Could not delete the product",
+      error: error.message,
+    });
+  }
+};
+
+exports.bulkDeleteProducts = async (req, res, next) => {
+  try {
+    const ids = req.body.ids;
+
+    const result = await Product.deleteMany({ _id: ids });
+
+    if (!result.deletedCount) {
+      return res.status(400).json({
+        status: "Fail",
+        error: "Could not delete the product",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "successfully deleted those products",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: "Could not delete those products",
+      error: error.message,
+    });
+  }
+};

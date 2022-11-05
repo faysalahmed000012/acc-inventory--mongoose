@@ -54,9 +54,40 @@ exports.updateProduct = async (req, res, next) => {
         $set: req.body,
       }
     );
+    // another method of updating
+    //   const product = Product.findById(productId)
+    //  const result = await product.set(data).save()
+    //   return result
     res.status(200).json({
       status: "success",
       message: "successfully updated the product",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: "Could not update the product",
+      error: error.message,
+    });
+  }
+};
+
+exports.bulkUpdateProduct = async (req, res, next) => {
+  try {
+    const result = await Product.updateMany({ _id: req.body.ids }, req.body, {
+      runValidators: true,
+    });
+
+    // const products = [];
+
+    // data.ids.forEach((product) => {
+    //   products.push(Product.updateOne({ _id: product.id }, product.data));
+    // });
+
+    // const result =await Promise.all(products);
+
+    res.status(200).json({
+      status: "success",
+      message: "successfully updated those products",
     });
   } catch (error) {
     res.status(400).json({

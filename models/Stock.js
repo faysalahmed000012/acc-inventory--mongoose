@@ -3,16 +3,19 @@ const validator = require("validator");
 const { ObjectId } = mongoose.Schema.Types;
 
 //schema design
-const productSchema = mongoose.Schema(
+const stockSchema = mongoose.Schema(
   {
+    productId: {
+      type: ObjectId,
+      required: true,
+      ref: "Product",
+    },
     name: {
       type: String,
       required: [true, "please provide a name"],
       trim: true,
       unique: [true, "Name must be unique"],
       lowercase: true,
-      minLength: [3, "Name must be at least 3 characters"],
-      maxLength: [100, "Name too loo large"],
     },
     description: {
       type: String,
@@ -23,11 +26,10 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
       enum: {
-        values: ["kg", "litre", "pcs", "bag"],
-        message: "unit value can't be {VALUE}, must be kg/litre/pcs/bag",
+        value: ["kg", "liter", "pcs", "bag"],
+        message: "unit value can not be {VALUE}, must be kg/liter/psc/bag",
       },
     },
-
     imageURLs: [
       {
         type: String,
@@ -49,6 +51,11 @@ const productSchema = mongoose.Schema(
         },
       },
     ],
+    price: {
+      type: Number,
+      require: true,
+      min: [0, "Product price can't be negative"],
+    },
     category: {
       type: String,
       required: true,
@@ -78,6 +85,54 @@ const productSchema = mongoose.Schema(
     //     _id: mongoose.Schema.Types.ObjectId,
     //   },
     // ],
+    status: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["in-stock", "out-of-stock", "discontinued"],
+        message: "status can not be {VALUE}",
+      },
+    },
+    store: {
+      name: {
+        type: String,
+        trim: true,
+        required: [true, "Please provide a store name"],
+        lowercase: true,
+        enum: {
+          values: [
+            "dhaka",
+            "chattogram",
+            "rajshahi",
+            "sylhet",
+            "khulna",
+            "barishal",
+            "rangpur",
+            "mymensingh",
+          ],
+          message: "{VALUE} is not a valid name",
+        },
+      },
+      id: {
+        type: ObjectId,
+        required: true,
+        ref: "Store",
+      },
+    },
+
+    suppliedBy: {
+      name: {
+        type: String,
+        required: [true, "please provide a supplier name"],
+        trim: true,
+        unique: [true, "Name must be unique"],
+      },
+      id: {
+        type: ObjectId,
+
+        ref: "Supplier",
+      },
+    },
   },
   {
     timestamps: true,
@@ -86,7 +141,7 @@ const productSchema = mongoose.Schema(
 
 // mongoose middleware for saving data : pre / post
 
-productSchema.pre("save", function (next) {
+stockSchema.pre("save", function (next) {
   console.log("before saving data");
   // this ->
   if (this.quantity === 0) {
@@ -107,6 +162,6 @@ productSchema.pre("save", function (next) {
 //   console.log(`Data saved for ${this.name}`);
 // };
 
-const Product = mongoose.model("Product", productSchema);
+const Stock = mongoose.model("Stock", stockSchema);
 
-module.exports = Product;
+module.exports = Stock;

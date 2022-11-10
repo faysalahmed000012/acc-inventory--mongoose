@@ -12,6 +12,7 @@ app.use(cors());
 
 // routes
 const productRoute = require("./routes/product.route");
+const brandRoute = require("./routes/brand.route");
 
 mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
   console.log(`Database connected successfully`.green.bold);
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 // posting to db
 
 app.use("/api/v1/product", productRoute);
+app.use("/api/v1/brand", brandRoute);
 
 app.listen(port, () => {
   console.log(`Listening to port ${port}`.yellow.bold);

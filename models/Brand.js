@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require("validatior");
+const validator = require("validator");
 const { ObjectId } = mongoose.Schema.Types;
 
 const brandSChema = mongoose.Schema(
@@ -20,7 +20,7 @@ const brandSChema = mongoose.Schema(
     },
     website: {
       type: String,
-      validate: [validator.isUrl, "Please provide a valid url"],
+      validate: [validator.isURL, "Please provide a valid url"],
     },
     location: String,
     products: [

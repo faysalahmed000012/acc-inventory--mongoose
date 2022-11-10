@@ -7,6 +7,14 @@ exports.getProducts = async (req, res, next) => {
 
     // const products = await Product.findById("6339943bb8499c716b18fd07")
 
+    const filters = { ...req.query };
+
+    // sort , page, limit -> exclude
+
+    const excludeFields = ["sort", "page", "limit"];
+
+    excludeFields.forEach((field) => delete filters[field]);
+
     res.status(200).json({
       status: "success",
       data: products,
